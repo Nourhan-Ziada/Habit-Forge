@@ -11,7 +11,6 @@ const habits = sqliteTable("habits", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   categoryId: integer("category_id")
-    .notNull()
     .references(() => habitCategories.id, { onDelete: "cascade" }),
   endDate: text(),
   status: text({ enum: ["active", "completed", "archived", "on hold"] })

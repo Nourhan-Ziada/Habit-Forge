@@ -1,0 +1,6 @@
+[
+  {
+    "type": "sqlite",
+    "path": "d:\\Dev\\Habit-Forge\\backend\\habits.db"
+  }
+]
