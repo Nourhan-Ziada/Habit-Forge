@@ -4,7 +4,9 @@ import {
   createHabitService,
   updateHabitService,
   deleteHabitService,
-  insertHabitEntryService
+  insertHabitEntryService,
+  getHabitsWithTodayEntryService,
+  getHabitStatsService
 } from "../services/habit.service.js";
 
 const getHabit = async (req, res) => {
@@ -79,4 +81,29 @@ const insertHabitEntry = async (req, res) => {
   }
 };
 
-export { getHabit, getHabits, createHabit, updateHabit, deleteHabit, insertHabitEntry };
+const getHabitsWithTodayEntry = async (req, res) => {
+  const userId = req.user.userId;
+
+  try {
+    const habits = await getHabitsWithTodayEntryService(userId);
+    res.status(200).json(habits);
+  } catch (error) {
+    console.error("Error fetching habits with today's entry:", error);
+    res.status(400).json({ error: error.message });
+  }
+};
+const getHabitStats = async (req, res) => {
+  const userId = req.user.userId;
+  const { habitId } = req.params;
+  const { from, to } = req.query;
+
+  try {
+    const stats = await getHabitStatsService(userId, habitId, from, to);
+    res.status(200).json(stats);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+export { getHabit, getHabits, createHabit, updateHabit, deleteHabit, insertHabitEntry, getHabitsWithTodayEntry, getHabitStats };

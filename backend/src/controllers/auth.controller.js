@@ -24,6 +24,7 @@ export const loginUser = async (req, res) => {
    res.cookie("authCookie", user.token, {
       httpOnly: true,
       maxAge: 3600000, // 1 hour
+      path: "/api",
     });
 
     // Return user information without the password

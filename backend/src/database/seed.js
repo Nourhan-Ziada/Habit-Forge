@@ -11,7 +11,7 @@ async function seed() {
 
   // 1. Check if user exists
   const existingUser = await db.query.users.findFirst({
-    where: eq(users.email, 'alice@example.com'),
+    where: eq(users.email, 'testapp@example.com'),
   });
 
   // 2. Generate hashed password only if user does not exist
@@ -19,11 +19,11 @@ async function seed() {
   if (existingUser) {
     user = existingUser;
   } else {
-    const passwordHash = await bcrypt.hash('test123', 10);
-
+    const passwordHash = await bcrypt.hash('Test@12345', 10);
+    
     // 3. Insert new user with password hash (use correct property name passwordHash)
     const insertedUsers = await db.insert(users).values({
-      email: 'alice@example.com',
+      email: 'testapp@example.com',
       passwordHash: passwordHash,
     }).returning();
 
@@ -61,18 +61,21 @@ async function seed() {
       description: 'Drink 8 glasses daily',
       userId: user.id,
       categoryId: health.id,
+      status: 'active',
     },
     {
       name: 'Morning Walk',
       description: 'Take a 20-minute walk every morning',
       userId: user.id,
       categoryId: health.id,
+      status: 'active',
     },
     {
       name: 'Plan the Day',
       description: 'Write daily tasks each morning',
       userId: user.id,
       categoryId: productivity.id,
+      status: 'active',
     },
   ];
 
