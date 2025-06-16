@@ -32,15 +32,11 @@ const getHabitByIdService = async (userId, habitId) => {
   return habit[0];
 };
 
-const getHabitsByUserService = async (userId, status = "active") => {
-  if (status && !allowedStatuses.includes(status)) {
-    throw new Error("Invalid status filter");
-  }
-
+const getHabitsByUserService = async (userId) => {
   return await db
     .select()
     .from(habits)
-    .where(and(eq(habits.userId, userId), eq(habits.status, status)));
+    .where(eq(habits.userId, userId));
 };
 
 const updateHabitService = async (habitData) => {

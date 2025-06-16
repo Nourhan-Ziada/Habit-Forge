@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react"; // common icon from lucide
 
-export function HabitTable({ data }) {
+export function HabitTable({ habits: data }) {
   const [habits, setHabits] = useState(data || []);
 
   const columns = [

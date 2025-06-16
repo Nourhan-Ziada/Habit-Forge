@@ -20,6 +20,9 @@ import { HabitTable } from "../components/HabitTable";
 
 export default function DashboardPage() {
   const [habits, setHabits] = useState([]);
+  const [ allHabits, setAllHabits] = useState([]);
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +30,10 @@ export default function DashboardPage() {
       try {
         const data = await habitsService.getHabitsWithTodayStatus();
         setHabits(data);
-        console.log("Habits fetched successfully:", data);
+        const allHabitsData = await habitsService.getHabits();
+        setAllHabits(allHabitsData);
+        console.log("Habits fetched successfully:", allHabitsData);
+
       } catch (error) {
         console.error("Failed to fetch habits:", error);
       }
@@ -116,7 +122,7 @@ export default function DashboardPage() {
                   />
                 ))}
               </div>
-              <HabitTable />
+              <HabitTable habits={allHabits} />
             </div>
           </div>
         </div>
