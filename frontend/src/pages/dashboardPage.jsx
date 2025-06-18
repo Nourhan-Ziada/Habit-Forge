@@ -20,12 +20,10 @@ import { HabitTable } from "../components/HabitTable";
 
 export default function DashboardPage() {
   const [habits, setHabits] = useState([]);
-  const [ allHabits, setAllHabits] = useState([]);
+  const [allHabits, setAllHabits] = useState([]);
 
 
   const navigate = useNavigate();
-
-  useEffect(() => {
     const fetchHabits = async () => {
       try {
         const data = await habitsService.getHabitsWithTodayStatus();
@@ -38,7 +36,7 @@ export default function DashboardPage() {
         console.error("Failed to fetch habits:", error);
       }
     };
-
+  useEffect(() => {
     fetchHabits();
   }, []);
   const handleToggleHabit = async (id) => {
@@ -95,7 +93,6 @@ export default function DashboardPage() {
                     }}
                     onToggle={handleToggleHabit}
                     onView={() => {
-                      //fetch the full habit details if needed
                       habitsService
                         .getHabitById(habit.id)
                         .then((fullHabit) => {
@@ -122,7 +119,7 @@ export default function DashboardPage() {
                   />
                 ))}
               </div>
-              <HabitTable habits={allHabits} />
+              <HabitTable habits={allHabits} onHabitCreated={fetchHabits} />
             </div>
           </div>
         </div>

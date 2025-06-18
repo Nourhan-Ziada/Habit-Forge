@@ -40,9 +40,29 @@ export const AuthProvider = ({ children }) => {
         };
       }
     };
+    const register = async (credentials) => {
+      try {
+        const userData = await authService.register(credentials.email, credentials.password);
+        setUser(userData);
+        setIsAuthenticated(true);
+        setIsLoading(false);
+        return {
+          success: true,
+          data: userData,
+        };
+      } catch (error) {
+        console.error("Registration failed:", error?.message);
+        return {
+          success: false,
+          error: error?.message || "Registration failed",
+        };
+      }
+    };
+
     const value = {
       user,
       login,
+      register,
       isAuthenticated,
       isLoading,
     };

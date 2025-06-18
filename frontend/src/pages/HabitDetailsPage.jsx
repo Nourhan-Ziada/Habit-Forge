@@ -71,33 +71,22 @@ export default function HabitDetailsPage() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto relative">
+     <div className="p-6 space-y-6 max-w-6xl mx-auto relative">
       <h1 className="text-2xl font-semibold">Habit Details</h1>
-
       <div className="bg-white shadow-lg rounded-lg p-6 border border-customPurple/40 flex justify-center">
-  <div className="w-full max-w-4xl">
-    <HabitDetails
-      habit={editableHabit}
-      editable={editable}
-      onChange={handleFieldChange}
-    />
-
-    {editable && (
-      <div className="flex gap-4 mt-4">
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? "Saving..." : "Save Changes"}
-        </Button>
-        {saveError && (
-          <span className="text-red-500 text-sm self-center">
-            {saveError}
-          </span>
-        )}
+        <div className="w-full max-w-4xl">
+          <HabitDetails
+            habit={editableHabit}
+            editable={editable}
+            header="Edit Habit"
+            actionLabel="Save"
+            loading={saving}
+            error={saveError}
+            onChange={handleFieldChange}
+            onSubmit={handleSave}
+          />
+        </div>
       </div>
-    )}
-  </div>
-</div>
-
-
       {/* Only show stats/charts if not editable */}
       {!editable && (
         <div className="mt-8">

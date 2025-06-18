@@ -15,8 +15,18 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
-export function HabitDetails({ habit, editable = false, onChange }) {
+export function HabitDetails({
+  habit,
+  editable = false,
+  onChange,
+  onSubmit,
+  loading = false,
+  header = "Habit Details",
+  actionLabel = "Save",
+  error,
+}) {
   const fields = [
     { label: "Name", key: "name", type: "text" },
     { label: "Description", key: "description", type: "textarea" },
@@ -31,7 +41,7 @@ export function HabitDetails({ habit, editable = false, onChange }) {
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <div>
               <CardTitle className="text-customPurple text-xl tracking-wide">
-                Habit Overview
+                {header}
               </CardTitle>
               <CardDescription className="text-sm text-muted-foreground mt-1">
                 {editable
@@ -42,8 +52,9 @@ export function HabitDetails({ habit, editable = false, onChange }) {
             <div>
               <p className="text-sm text-muted-foreground">
                 <span className="font-medium">
-
-                  {new Date(habit.createdAt).toLocaleString()}
+                  {habit.createdAt
+                    ? new Date(habit.createdAt).toLocaleString()
+                    : ""}
                 </span>
               </p>
             </div>
@@ -102,7 +113,6 @@ export function HabitDetails({ habit, editable = false, onChange }) {
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    {/* ["active", "completed", "archived", "on hold"] */}
                     <SelectItem value="active">Active</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
                     <SelectItem value="archived">Archived</SelectItem>
@@ -139,6 +149,20 @@ export function HabitDetails({ habit, editable = false, onChange }) {
               )}
             </div>
           </div>
+
+          {/* Action Button */}
+          {editable && (
+            <div className="flex gap-4 mt-4">
+              <Button onClick={onSubmit} disabled={loading}>
+                {loading ? "Saving..." : actionLabel}
+              </Button>
+              {error && (
+                <span className="text-red-500 text-sm self-center">
+                  {error}
+                </span>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

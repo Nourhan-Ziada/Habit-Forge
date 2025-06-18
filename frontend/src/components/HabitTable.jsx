@@ -14,9 +14,26 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react"; // common icon from lucide
+import { HabitDetails } from "./HabitDetails";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { habitsService } from "@/services/habitsService";
 
-export function HabitTable({ habits: data }) {
-  const [habits, setHabits] = useState(data || []);
+
+export function HabitTable({ habits: initialHabits, onHabitCreated }) {
+  const [habits, setHabits] = useState(initialHabits || []);
+  const [showAdd, setShowAdd] = useState(false);
+  const [newHabit, setNewHabit] = useState({
+    name: "",
+    description: "",
+    targetDays: 0,
+    categoryId: "",
+    status: "active",
+    endDate: "",
+  });
+//   const [filter, setFilter] = useState("");
+  
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
 
   const columns = [
     {
@@ -71,21 +88,36 @@ export function HabitTable({ habits: data }) {
   });
 
   const filterByStatus = (status) => {
-    const filteredHabits = data.filter((habit) => habit.status === status);
+    const filteredHabits = initialHabits.filter((habit) => habit.status === status);
     setHabits(filteredHabits);
   };
 
   const handleAddHabit = () => {
-    // Placeholder logic - replace with modal or form
-    const newHabit = {
-      id: habits.length + 1,
-      name: "New Habit",
-      description: "Description here...",
+    setShowAdd(true);
+    setNewHabit({
+      name: "",
+      description: "",
+      targetDays: 0,
+      categoryId: "",
       status: "active",
-      createdAt: new Date().toISOString(),
-      endDate: null,
-    };
-    setHabits([...habits, newHabit]);
+      endDate: "",
+    });
+    setError(null);
+  };
+
+  const handleCreateHabit = async () => {
+    setSaving(true);
+    setError(null);
+    try {
+      const created = await habitsService.createHabit(newHabit);
+      setHabits([...habits, created]);
+      setShowAdd(false);
+      onHabitCreated();
+    } catch (err) {
+      setError(`Failed to create habit.`)
+      console.error("Error creating habit:", err);
+    }
+    setSaving(false);
   };
 
   return (
@@ -109,7 +141,7 @@ export function HabitTable({ habits: data }) {
             <Button
               key={status}
               variant="outline"
-              onClick={() => filterByStatus(status)}
+              onClick={() => {filterByStatus(status);}}
             >
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </Button>
@@ -150,6 +182,23 @@ export function HabitTable({ habits: data }) {
           </TableBody>
         </Table>
       </div>
+
+      <Sheet open={showAdd} onOpenChange={setShowAdd}>
+        <SheetContent side="right" className="max-w-lg w-full">
+          <HabitDetails
+            habit={newHabit}
+            editable={true}
+            header="Create New Habit"
+            actionLabel="Create"
+            loading={saving}
+            error={error}
+            onChange={(key, value) =>
+              setNewHabit((prev) => ({ ...prev, [key]: value }))
+            }
+            onSubmit={handleCreateHabit}
+          />
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
